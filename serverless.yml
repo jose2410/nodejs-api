@@ -1,70 +1,74 @@
-service: mi-api-serverless
+service: api-prueba
 frameworkVersion: "3"
 
 provider:
   name: aws
   runtime: nodejs18.x
+  stage: dev
   region: us-east-1
-  apiGateway:
-    shouldStartNameWithService: true
+  environment:
+    PEOPLE_TABLE: "peolev2-dev"
+  iam:
+    role:
+      statements:                  
+      - Effect: Allow
+        Action:
+          - dynamodb:Query
+          - dynamodb:Scan
+          - dynamodb:GetItem
+          - dynamodb:PutItem
+          - dynamodb:UpdateItem
+          - dynamodb:DeleteItem
+          - dynamodb:BatchWriteItem
+        Resource:  
+          - "arn:aws:dynamodb:us-east-1:381492172196:table/peolev2-dev"
+      - Effect: Allow
+        Action:
+          - dynamodb:Query
+          - dynamodb:Scan
+          - dynamodb:GetItem
+          - dynamodb:PutItem
+          - dynamodb:UpdateItem
+          - dynamodb:DeleteItem
+          - dynamodb:BatchWriteItem
+        Resource:                     
+          - "arn:aws:dynamodb:us-east-1:381492172196:table/peolev2-dev/index/*"
 
 functions:
-  crearPersonaje:
-    handler: handler.crearPersonaje
+  insertPeople:
+    handler: functions/insert.crearPeopleHandler
+    timeout: 25 # optional, in seconds, default is 6    
+    memorySize: 2048 # Default memory size for functions (default: 1024MB)
     events:
       - http:
-          path: personajes/crear
+          path: /insert-people
           method: post
-
-  obtenerPersonajes:
-    handler: handler.obtenerPersonajes
+          cors: true
+  getPeople:
+    handler: functions/get.obtenerPeopleHandler
     events:
       - http:
-          path: personajes
+          path: /get-people
           method: get
-
-  helloperson:
-    handler: handler.helloperson
+          cors: true
+  getbyidPeople:
+    handler: functions/get.obtenerPeopleIdHandler
     events:
       - http:
-          path: hello/{name}
+          path: /get-peopleid
           method: get
-
-  createUser:
-    handler: handler.createUser
-    events:
-      - http:
-          path: user/create
-          method: post
-
-  updateUser:
-    handler: handler.updateUser
-    events:
-      - http:
-          path: user/update/{id}
-          method: put
+          cors: true
 
 resources:
   Resources:
-    MiTablaDynamoDB:
+    maestroPeopleTable:
       Type: AWS::DynamoDB::Table
       Properties:
-        TableName: PersonaDynamoDB
+        TableName: people-${opt:stage, 'dev'}
         AttributeDefinitions:
-          - AttributeName: id
+          - AttributeName: ID
             AttributeType: S
         KeySchema:
-          - AttributeName: id
+          - AttributeName: ID
             KeyType: HASH
         BillingMode: PAY_PER_REQUEST
-# you can add CloudFormation resource templates here
-#resources:
-#  Resources:
-#    NewResource:
-#      Type: AWS::S3::Bucket
-#      Properties:
-#        BucketName: my-new-bucket
-#  Outputs:
-#     NewOutput:
-#       Description: "Description for the output"
-#       Value: "Some output value"

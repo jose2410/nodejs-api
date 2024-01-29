@@ -1,7 +1,7 @@
 {
   "dependencies": {
-    "aws-sdk": "^2.1543.0",
-    "axios": "^1.6.6",
-    "body-parser": "^1.20.2"
+    "aws-sdk": "^2.1545.0",
+    "axios": "^1.6.7",
+    "dayjs": "^1.11.10"
   }
 }
