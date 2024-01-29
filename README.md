@@ -13,3 +13,5 @@ Crear un modelo de su elección mediante el uso de un endpoint POST, la data se 
 Crear un endpoint GET que muestre la data almacenada.
 
 API de prueba SWAPI: https://swapi.py4e.com/documentation
+
+![image](https://github.com/jose2410/nodejs-api/assets/31625020/95e360f6-cd6d-4c9a-8fcc-d4adcf8f5d16)
